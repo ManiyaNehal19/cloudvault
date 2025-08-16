@@ -1,26 +1,82 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* Headings */
+.h1 {
+  @apply font-bold text-[40px] leading-[42px] ;
+}
+
+.h2 {
+  @apply font-bold text-[24px] leading-[36px];
+}
+
+.h3 {
+  @apply font-medium text-[20px] leading-[28px] text-black;
+}
+
+.h4 {
+  @apply font-medium text-[18px] leading-[20px] text-black;
+}
+
+.h5 {
+  @apply font-semibold text-[16px] leading-[24px] text-black;
+}
+
+/* Subtitles */
+.subtitle1 {
+  @apply font-medium text-[16px] leading-[24px];
+}
+
+.subtitle2 {
+  @apply font-semibold text-[14px] leading-[20px] text-black;
+}
+
+/* Body */
+.body1 {
+  @apply font-normal text-[16px] leading-[24px] text-gray-700;
+}
+
+.body2 {
+  @apply font-normal text-[14px] leading-[20px] text-gray-600;
+}
+
+/* Button */
+.button {
+  @apply font-medium text-[14px] leading-[20px] uppercase text-white;
+}
+
+/* Caption */
+.caption {
+  @apply font-normal text-[12px] leading-[16px] text-gray-500;
+}
+
+/* Overline */
+.overline {
+  @apply font-normal text-[10px] leading-[14px] tracking-[0.1em] uppercase text-gray-500;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-inter);        /* main Inter */
+  --font-heading: var(--font-merriweather); /* complimentary */
   --font-mono: var(--font-geist-mono);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #f0f0eb;
+    --primaryColor: #125ffa;  /* primary blue background */
+    --secondaryColor: #abf511;
   }
 }
 
 body {
   background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  color: black;
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+}
+
+/* Example: headings use complimentary font */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading), serif;
 }
