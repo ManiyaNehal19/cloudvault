@@ -50,7 +50,9 @@ export default function Layout({children}:{children:React.ReactNode}){
                 
 
             </div>
-            <div className="w-2/4">{children}</div>
+            <div className="w-2/4">
+            {children}
+            </div>
             
         </section>
         </div>

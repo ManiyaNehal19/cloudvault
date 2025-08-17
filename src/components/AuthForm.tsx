@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
+import { createAccount } from "@/lib/actions/user.actions"
 import {
   Form,
   FormControl,
@@ -14,9 +15,10 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { useState } from "react"
+import OtpModal from "./otp-modal"
 
 type AuthFormProps = "Login" | "Register"
-
 
 const authFormSchema = (type: AuthFormProps) =>
   z.object({
@@ -29,6 +31,7 @@ const authFormSchema = (type: AuthFormProps) =>
 
 function AuthForm({ type }: { type: AuthFormProps }) {
   const formSchema = authFormSchema(type)
+  const [accID, setaccID] = useState<string | null>(null)
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -38,11 +41,23 @@ function AuthForm({ type }: { type: AuthFormProps }) {
     },
   })
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log("Form submitted:", values)
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    try {
+      const user = await createAccount({
+        email: values.email,
+        fullName: values.fullName || "",
+      })
+      console.log("User acc id:",user.accID);
+      
+      setaccID(user.accID)
+    } catch (error) {
+      console.error("Error creating account:", error)
+    }
   }
 
+  // 👇 Now the JSX return is at the component level, not inside onSubmit
   return (
+    <>
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
@@ -52,7 +67,6 @@ function AuthForm({ type }: { type: AuthFormProps }) {
           {type === "Login" ? "Login" : "Register"}
         </h1>
 
-    
         {type === "Register" && (
           <FormField
             control={form.control}
@@ -67,7 +81,7 @@ function AuthForm({ type }: { type: AuthFormProps }) {
                     className="shad-form-input focus:ring-1 focus:ring-[#125ffa]"
                   />
                 </FormControl>
-                <FormMessage className="text-red-500"/> 
+                <FormMessage className="text-red-500" />
               </FormItem>
             )}
           />
@@ -87,15 +101,12 @@ function AuthForm({ type }: { type: AuthFormProps }) {
                   className="shad-form-input focus:ring-1 focus:ring-[#125ffa]"
                 />
               </FormControl>
-              <FormMessage className="text-red-500" /> 
+              <FormMessage className="text-red-500" />
             </FormItem>
           )}
         />
 
-        <Button
-          className="bg-[#125ffa] text-white w-full"
-          type="submit"
-        >
+        <Button className="bg-[#125ffa] text-white w-full" type="submit">
           {type === "Login" ? "Login" : "Register"}
         </Button>
 
@@ -114,6 +125,11 @@ function AuthForm({ type }: { type: AuthFormProps }) {
         </div>
       </form>
     </Form>
+    {console.log("Account id before modal shows up:",accID)}
+    {accID && (<OtpModal email={form.getValues("email")} accountID={accID}/>)}
+   
+    
+    </>
   )
 }
 
