@@ -2,7 +2,7 @@
 "use server";
 
 import { Query, ID } from "node-appwrite";
-import { createAdminClient } from "../appwrite";
+import { createAdminClient, createSessionClient } from "../appwrite";
 import { appwriteConfig } from "../appwrite/config";
 import { parseStringify } from "../utils";
 import { cookies } from "next/headers";
@@ -62,7 +62,7 @@ export const createAccount = async ({
                 email,
                 fullName,
                 avatar: 
-                "https://e7.pngegg.com/pngimages/84/165/png-clipart-united-states-avatar-organization-information-user-avatar-service-computer-wallpaper-thumbnail.png",
+                "https://www.svgrepo.com/show/213788/avatar-user.svg",
                 accID,
             
             }
@@ -90,4 +90,16 @@ export const verfiySecret = async({accID, password}:{accID:string, password:stri
         handleError(error, "failed to verify OTP")
     }
 
+}
+export const getcurrUser = async ()=>{
+    const {database, account} = await createSessionClient();
+    const result = await account.get();
+    const user =  await database.listDocuments(
+        appwriteConfig.databaseId,
+        appwriteConfig.usersCollectionId,
+        [Query.equal("accountId", result.$id)]
+
+    )
+    if(user.total<=0) return null;
+    return parseStringify({ value: user.documents[0].value });
 }
