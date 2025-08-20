@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
-import { createAccount } from "@/lib/actions/user.actions"
+import { createAccount, LoginUser } from "@/lib/actions/user.actions"
 import {
   Form,
   FormControl,
@@ -43,13 +43,25 @@ function AuthForm({ type }: { type: AuthFormProps }) {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      const user = await createAccount({
+      let user;
+      if(type==="Register"){
+        user = await createAccount({
         email: values.email,
         fullName: values.fullName || "",
-      })
-      console.log("User acc id:",user.accID);
+        })
+        console.log("User acc id register:",user.accID);
+        setaccID(user.value.accID)
+        console.log(typeof(user.value.accID), "Id type in register");
+
+      }else{
+        user = await LoginUser({email:values.email})
+        console.log("User acc id login:",user.value.accID);
+        
+        console.log("User acc id login2:",user.accID);
+        console.log(typeof(user.value.accID));
+        setaccID(user.value.accID)
+      }
       
-      setaccID(user.accID)
     } catch (error) {
       console.error("Error creating account:", error)
     }
@@ -125,7 +137,7 @@ function AuthForm({ type }: { type: AuthFormProps }) {
         </div>
       </form>
     </Form>
-    {console.log("Account id before modal shows up:",accID)}
+    
     {accID && (<OtpModal email={form.getValues("email")} accountID={accID}/>)}
    
     

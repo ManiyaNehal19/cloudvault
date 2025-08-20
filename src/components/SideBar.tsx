@@ -7,7 +7,14 @@ import LoginPage from  "@/app/assests/Loginpage.png"
 import { avatarUSer, navItems } from '@/constants';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
-function SideBar() {
+interface Props {
+  fullName: string,
+  avatar:string,
+  email: string
+}
+function SideBar({fullName, avatar, email}:Props) {
+    console.log("Side BAr Info",fullName, avatar, email);
+    
     const pathname = usePathname();
   return (
     <aside className=" bg-white remove-scrollbar hidden h-screen w-[90px] flex-col overflow-auto px-5 py-7 sm:flex lg:w-[280px] xl:w-[325px]">
@@ -42,7 +49,7 @@ function SideBar() {
                 />
                 
        </div></Link>
-       <nav className='h5 mt-9 flex-1 gap-1 text-brand !important'>
+       <nav className='h5 mt-9 flex-1 gap-1 text-[#125ffa]'>
         <ul className='flex flex-1 flex-col gap-6'>
             {navItems.map(({href, name, icon})=>
               (
@@ -60,7 +67,8 @@ function SideBar() {
        </nav>
        {/* <Image alt='Login Page file' height={170} width={170} src={LoginPage}></Image> */}
       <div className='mt-4 flex items-center justify-center gap-2 rounded-full bg-[#125ffa]/10 p-1 text-light-100 lg:justify-start lg:p-3'>
-      <Image src={avatarUSer} alt='Avatar' width={30} height={30} />
+      
+      <Image src={avatar} alt='Avatar' width={30} height={30} />
       <div className='hidden lg:block'>
         <p className='text-[14px] leading-[20px] font-semibold'>{fullName}</p>
         <p className='text-[12px] leading-[16px] font-normal'>{email}</p>

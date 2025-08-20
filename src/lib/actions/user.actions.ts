@@ -6,6 +6,8 @@ import { createAdminClient, createSessionClient } from "../appwrite";
 import { appwriteConfig } from "../appwrite/config";
 import { parseStringify } from "../utils";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+import { email } from "zod";
 const handleError = (error:unknown, message:string)=>{
     console.log(error, message);
     throw error;
@@ -75,6 +77,7 @@ export const createAccount = async ({
 export const verfiySecret = async({accID, password}:{accID:string, password:string})=>{
     try{
     const {account} = await createAdminClient();
+   
     const session = await account.createSession(accID, password);
 
     (await cookies()).set('appwrite-session', session.secret,{
@@ -97,9 +100,36 @@ export const getcurrUser = async ()=>{
     const user =  await database.listDocuments(
         appwriteConfig.databaseId,
         appwriteConfig.usersCollectionId,
-        [Query.equal("accountId", result.$id)]
+        [Query.equal("accID", result.$id)]
 
     )
     if(user.total<=0) return null;
-    return parseStringify({ value: user.documents[0].value });
+    return parseStringify({ value: user.documents[0]});
+}
+
+export async function logoutUser() {
+    const {account} = await createSessionClient();
+    try {
+        await account.deleteSession('current');
+        (await cookies()).delete("appwrite-session")
+    }catch(error){
+        handleError(error, "Failed to signout user")
+    }finally{
+        redirect("/login")
+    } 
+}
+export const LoginUser = async ({email}:{email:string})=>{
+    try {
+        const existingUser = await getUserbyEmail(email);
+        if(existingUser){
+            await sendEmailOTP({email});  
+            console.log("Login User Id in function:",existingUser.accID);
+              
+            return parseStringify({ value: {accID: existingUser.accID } })
+        }
+   
+    } catch (error) {
+        console.log(error)
+
+    }
 }
