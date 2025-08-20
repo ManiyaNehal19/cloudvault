@@ -4,13 +4,16 @@ import logout from "@/app/assests/logout.svg"
 import Search from './ui/Search'
 import FileUploader from './ui/FileUploader'
 import { logoutUser } from '@/lib/actions/user.actions'
-function Header() {
+function Header({ownerID, accID}:{
+  ownerID: string,
+  accID:string
+}) {
   return (
    
     <header className='hidden items-center justify-between gap-5 p-5 sm:flex lg:py-7 xl:gap-10 bg-white'>
         <Search/>
         <div className='flex items-center  flex-center min-w-fit gap-4 '>
-            <FileUploader/>
+            <FileUploader ownerID={ownerID} accID={accID}/>
             <form action={async ()=>{
               "use server";
               await logoutUser();

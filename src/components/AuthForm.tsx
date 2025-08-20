@@ -49,16 +49,16 @@ function AuthForm({ type }: { type: AuthFormProps }) {
         email: values.email,
         fullName: values.fullName || "",
         })
-        console.log("User acc id register:",user.accID);
+        // console.log("User acc id register:",user.accID);
         setaccID(user.value.accID)
-        console.log(typeof(user.value.accID), "Id type in register");
+        // console.log(typeof(user.value.accID), "Id type in register");
 
       }else{
         user = await LoginUser({email:values.email})
-        console.log("User acc id login:",user.value.accID);
+        // console.log("User acc id login:",user.value.accID);
         
-        console.log("User acc id login2:",user.accID);
-        console.log(typeof(user.value.accID));
+        // console.log("User acc id login2:",user.accID);
+        // console.log(typeof(user.value.accID));
         setaccID(user.value.accID)
       }
       

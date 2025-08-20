@@ -13,7 +13,7 @@ interface Props {
   email: string
 }
 function SideBar({fullName, avatar, email}:Props) {
-    console.log("Side BAr Info",fullName, avatar, email);
+    // console.log("Side BAr Info",fullName, avatar, email);
     
     const pathname = usePathname();
   return (

@@ -70,21 +70,24 @@ function MobileNav({userID, fullName, avatar, email, accID}:Props) {
       </nav>
       <Separator className="mb-4 bg-light-200/20"/>
       <div className='flex flex-col justify-between gap-5 pb-5'>
-        <button 
-  type="submit"
-  className="flex items-center justify-around gap-2 px-4 h-[52px] rounded-full bg-[#125ffa]/10 text-[#125ffa] transition-all hover:bg-[#125ffa]/20"
+  <div className='flex gap-2 items-center justify-between'>
+    <FileUploader ownerID={userID} accID={accID}/>
+  <button
+  type="button"
+  onClick={async () => await logoutUser()}
+  className="flex items-center justify-center   h-[52px] px-6 rounded-full bg-[#125ffa]/10 text-[#125ffa] font-medium shadow-md hover:bg-[#125ffa]/20 transition-colors"
 >
- <FileUploader/>
   <Image
     src={logout}
     width={50}
     height={50}
     alt="Logout"
-    className="cursor-pointer mt-2 "
-    
-    onClick={async () => {await logoutUser()}}
+    className="object-contain mt-2"
   />
+
 </button>
+  </div>
+        
       </div>
        
     </SheetHeader>

@@ -1,0 +1,165 @@
+"use server"
+const handleError = (error:unknown, message:string)=>{
+    console.log(error, message);
+    throw error;
+    
+}
+import { InputFile } from "node-appwrite/file";
+import { createAdminClient } from "../appwrite"
+import { appwriteConfig } from "../appwrite/config";
+import { ID, Models, Query } from "node-appwrite";
+import { constructFileUrl, getFileType, parseStringify } from "../utils";
+import { revalidatePath } from "next/cache";
+import { getcurrUser } from "./user.actions";
+import { UploadFileProps, RenameFileProps, DeleteFileProps, UpdateFileUsersProps } from "@/index";
+type UserType = {
+fullName: string,
+  email: string,
+  avatar: string,
+  accID: string,
+  '$id': string,
+  '$sequence': number,
+  '$createdAt': Date,
+  '$updatedAt': Date,
+  '$permissions': [],
+  files: [],
+  '$databaseId': string,
+  '$collectionId': string
+}
+const createQueries =  (currUser:UserType)=>{
+    
+    const queries = [
+        Query.or([
+            Query.equal("owner", [currUser.$id]),
+            Query.contains("users", [currUser.email])
+        ])
+    ];
+    return queries;
+}
+export const UploadFile = async ({ file,
+  ownerId,
+  accountId,
+  path}:UploadFileProps)=>{
+// console.log("Upload FIle function: ",ownerId, accountId);
+
+
+const {storage, database}= await createAdminClient()
+try {
+    const inputFile = InputFile.fromBuffer(file, file.name);
+    const bucketFile = await storage.createFile(appwriteConfig.bucketId, ID.unique(), inputFile);
+    const fileDocument = {
+  type: getFileType(bucketFile.name).type,
+  name: bucketFile.name,
+  url: constructFileUrl(bucketFile.$id),
+  extension: getFileType(bucketFile.name).extension,
+  size: bucketFile.sizeOriginal,
+  owner: ownerId,
+  accID: accountId, 
+  users: [],
+  bucketFileId: bucketFile.$id
+}
+    const newFile = await database.createDocument(
+        appwriteConfig.databaseId,
+        appwriteConfig.filesCollectionId,
+        ID.unique(),
+        fileDocument,
+    )
+    .catch(async(error)=>{
+        await storage.deleteFile(appwriteConfig.bucketId, bucketFile.$id);
+        handleError(error, "Failed to create file document");
+    })
+    revalidatePath(path);
+    return parseStringify({value:{newFile}})
+} catch (error) {
+    handleError(error, "Failed to upload fie")
+}
+}
+export const GetFile = async ()=>{
+    const {database} = await createAdminClient()
+    try {
+        const currUser = await getcurrUser();
+        if(!currUser) throw new Error("No user found")
+        const queries = createQueries(currUser.value);
+        // console.log("type of user", typeof(currUser.value),"User Data", currUser.value);
+        const files = await database.listDocuments(
+            appwriteConfig.databaseId,
+            appwriteConfig.filesCollectionId,
+            queries,
+        )
+        return parseStringify({value:{files}})
+    } catch (error) {
+        handleError(error, "failed to get file")
+    }
+}
+export const renameFile = async ({
+  fileId,
+  name,
+  extension,
+  path,
+}: RenameFileProps) => {
+  const { database } = await createAdminClient();
+
+  try {
+    const newName = `${name}.${extension}`;
+    const updatedFile = await database.updateDocument(
+      appwriteConfig.databaseId,
+      appwriteConfig.filesCollectionId,
+      fileId,
+      {
+        name: newName,
+      },
+    );
+
+    revalidatePath(path);
+    return parseStringify(updatedFile);
+  } catch (error) {
+    handleError(error, "Failed to rename file");
+  }
+};
+export const deleteFile = async ({
+  fileId,
+  bucketFileId,
+  path,
+}: DeleteFileProps) => {
+  const { database, storage } = await createAdminClient();
+
+  try {
+    const deletedFile = await database.deleteDocument(
+      appwriteConfig.databaseId,
+      appwriteConfig.filesCollectionId,
+      fileId,
+    );
+
+    if (deletedFile) {
+      await storage.deleteFile(appwriteConfig.bucketId, bucketFileId);
+    }
+
+    revalidatePath(path);
+    return parseStringify({ status: "success" });
+  } catch (error) {
+    handleError(error, "Failed to rename file");
+  }
+};
+export const updateFileUsers = async ({
+  fileId,
+  emails,
+  path,
+}: UpdateFileUsersProps) => {
+  const { database } = await createAdminClient();
+
+  try {
+    const updatedFile = await database.updateDocument(
+      appwriteConfig.databaseId,
+      appwriteConfig.filesCollectionId,
+      fileId,
+      {
+        users: emails,
+      },
+    );
+
+    revalidatePath(path);
+    return parseStringify(updatedFile);
+  } catch (error) {
+    handleError(error, "Failed to rename file");
+  }
+};

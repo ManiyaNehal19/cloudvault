@@ -7,6 +7,10 @@ import UploadBtn from '@/app/assests/upload-arrow-svgrepo-com.svg'
 import FileLoader from '@/app/assests/icons/file-loader.gif'
 import Thumbnail from '../Thumbnail'
 import RemoveSVg from '@/app/assests/icons/remove.svg'
+import { MAX_FILE_SIZE } from '@/constants'
+import { toast } from "sonner"
+import { usePathname } from 'next/navigation'
+ import { UploadFile } from '@/lib/actions/file.action'
 
 interface Props{
   ownerID:string,
@@ -15,7 +19,10 @@ interface Props{
 }
 
 function FileUploader({ownerID,accID, className }:Props) {
+  console.log("ownerid and accID",ownerID, accID);
+  
   const [files, setFiles] = useState<File[]>([])
+  const path = usePathname();
   
   const handleRemove = (
     e: React.MouseEvent<HTMLImageElement>, 
@@ -25,21 +32,57 @@ function FileUploader({ownerID,accID, className }:Props) {
     setFiles(prevFile => prevFile.filter(file => file.name !== filename))
   }
   
-  const onDrop = useCallback(async (acceptedFiles: File[]) => {
-    // Do something with the files
-    setFiles(acceptedFiles)
-  }, [])
-  
-  const {getRootProps, getInputProps, isDragActive} = useDropzone({onDrop})
+const onDrop = useCallback(async (acceptedFiles: File[]) => {
+  setFiles(acceptedFiles)
+
+  const uploadPromises = acceptedFiles.map(async (file) => {
+    if (file.size > MAX_FILE_SIZE) {
+      setFiles((prevFile) => (
+        prevFile.filter((f) => (f.name !== file.name))
+      ))
+
+      toast(
+        <div className="w-full h-full flex items-center justify-between bg-red-700 p-4 rounded">
+          <p className="text-[14px] leading-[20px] font-normal text-white">
+            <span className="font-semibold">{file.name}</span> is too large. Max file size is 50MB
+          </p>
+        </div>,
+        {
+          style: {
+            padding: 0,
+            background: "transparent",
+          },
+        }
+      );
+    }
+
+    return UploadFile({ file: file, ownerId: ownerID, accountId: accID, path: path })
+      .then((uploadedFile) => {
+        if (uploadedFile) {
+          setFiles((prevFile) => prevFile.filter(f => f.name !== file.name));
+        }
+      });
+  }); // ← this .map(...) call was missing its closing parenthesis!
+    await Promise.all(uploadPromises)
+}, [ownerID, accID, path]);
+
+  const {getRootProps, getInputProps} = useDropzone({onDrop})
 
   return (
     <div className="relative">
       <div {...getRootProps()} className='cursor-pointer'>
         <input {...getInputProps()} />
-        <button type="button" className={cn("primary-btn h-[52px] gap-2 px-10 shadow-drop-1", className)}>
-          <Image src={UploadBtn} alt="Upload" height={24} width={24}/>{" "}
-          <p>Upload</p>
-        </button>
+        <button
+  type="button"
+  className={cn(
+    "flex items-center cursor-pointer justify-center gap-2 h-[52px] px-6 rounded-full bg-[#125ffa]/80 text-white font-medium shadow-md hover:bg-[#0f4bcc] transition-colors",
+    className
+  )}
+>
+  <Image className='filter invert' src={UploadBtn} alt="Upload" height={20} width={20} />
+  <span>Upload</span>
+</button>
+
       </div>
       
       {files.length > 0 && (
