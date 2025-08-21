@@ -3,13 +3,19 @@ import { GetFile } from '@/lib/actions/file.action';
 import { Section } from 'lucide-react';
 import React from 'react'
 import { Models } from 'node-appwrite';
-import { StoredFile, SearchParamProps } from '@/index';
+import { StoredFile, SearchParamProps, FileType } from '@/index';
 import Card from '@/components/Card';
+import { string } from 'zod';
+import { getFileType, getFileTypesParams } from '@/lib/utils';
 
-const  Page = async ({params}: SearchParamProps) => {
+const  Page = async ({searchParams,params}: SearchParamProps) => {
     const type = ((await params)?.type as string) ||"";
+    const searchText = ((await searchParams)?.query) as string || "";
+    const sort = ((await searchParams)?.sort) as string || "";
+
     const total_size = "0MB";
-    const files = await GetFile();
+    const types = getFileTypesParams(type) as FileType[] ;
+    const files = await GetFile({types, searchText, sort});
     console.log(files.value.files.documents);
     
 

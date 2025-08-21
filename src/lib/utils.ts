@@ -1,6 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
-
+import { FileType } from "..";
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
@@ -110,76 +110,85 @@ export const formatDateTime = (isoString: string | null | undefined) => {
   return `${time}, ${day} ${month}`;
 };
 
-export const getFileIcon = (
-  extension: string | undefined,
-  type: FileType | string,
-) => {
-  switch (extension) {
-    // Document
-    case "pdf":
-      return "/assets/icons/file-pdf.svg";
-    case "doc":
-      return "/assets/icons/file-doc.svg";
-    case "docx":
-      return "/assets/icons/file-docx.svg";
-    case "csv":
-      return "/assets/icons/file-csv.svg";
-    case "txt":
-      return "/assets/icons/file-txt.svg";
-    case "xls":
-    case "xlsx":
-      return "/assets/icons/file-document.svg";
-    // Image
-    case "svg":
-      return "/assets/icons/file-image.svg";
-    // Video
-    case "mkv":
-    case "mov":
-    case "avi":
-    case "wmv":
-    case "mp4":
-    case "flv":
-    case "webm":
-    case "m4v":
-    case "3gp":
-      return "/assets/icons/file-video.svg";
-    // Audio
-    case "mp3":
-    case "mpeg":
-    case "wav":
-    case "aac":
-    case "flac":
-    case "ogg":
-    case "wma":
-    case "m4a":
-    case "aiff":
-    case "alac":
-      return "/assets/icons/file-audio.svg";
+// export const getFileIcon = (
+//   extension: string | undefined,
+//   type: FileType | string,
+// ) => {
+//   switch (extension) {
+//     // Document
+//     case "pdf":
+//       return "/assets/icons/file-pdf.svg";
+//     case "doc":
+//       return "/assets/icons/file-doc.svg";
+//     case "docx":
+//       return "/assets/icons/file-docx.svg";
+//     case "csv":
+//       return "/assets/icons/file-csv.svg";
+//     case "txt":
+//       return "/assets/icons/file-txt.svg";
+//     case "xls":
+//     case "xlsx":
+//       return "/assets/icons/file-document.svg";
+//     // Image
+//     case "svg":
+//       return "/assets/icons/file-image.svg";
+//     // Video
+//     case "mkv":
+//     case "mov":
+//     case "avi":
+//     case "wmv":
+//     case "mp4":
+//     case "flv":
+//     case "webm":
+//     case "m4v":
+//     case "3gp":
+//       return "/assets/icons/file-video.svg";
+//     // Audio
+//     case "mp3":
+//     case "mpeg":
+//     case "wav":
+//     case "aac":
+//     case "flac":
+//     case "ogg":
+//     case "wma":
+//     case "m4a":
+//     case "aiff":
+//     case "alac":
+//       return "/assets/icons/file-audio.svg";
 
-    default:
-      switch (type) {
-        case "image":
-          return "/assets/icons/file-image.svg";
-        case "document":
-          return "/assets/icons/file-document.svg";
-        case "video":
-          return "/assets/icons/file-video.svg";
-        case "audio":
-          return "/assets/icons/file-audio.svg";
-        default:
-          return "/assets/icons/file-other.svg";
-      }
-  }
-};
+//     default:
+//       switch (type) {
+//         case "image":
+//           return "/assets/icons/file-image.svg";
+//         case "document":
+//           return "/assets/icons/file-document.svg";
+//         case "video":
+//           return "/assets/icons/file-video.svg";
+//         case "audio":
+//           return "/assets/icons/file-audio.svg";
+//         default:
+//           return "/assets/icons/file-other.svg";
+//       }
+//   }
+// };
 
 // APPWRITE URL UTILS
 // Construct appwrite file URL - https://appwrite.io/docs/apis/rest#images
-export const constructFileUrl = (bucketFileId: string) => {
-  return `${process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT}/storage/buckets/${process.env.NEXT_PUBLIC_APPWRITE_BUCKET}/files/${bucketFileId}/view?project=${process.env.NEXT_PUBLIC_APPWRITE_PROJECT}`;
-};
 
+
+
+// [ENDPOINT]/v1/storage/buckets/[BUCKET_ID]/files/[FILE_ID]/preview?project=<PROJECT_ID>
+export const constructFileUrl = (bucketFileId: string) => {
+
+  return `${process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT}/storage/buckets/${process.env.NEXT_PUBLIC_APPWRITE_BUCKET}/files/${bucketFileId}/view?project=${process.env.NEXT_PUBLIC_APPPWRITE_PROJECT}`;
+  
+  
+};
+// GET /storage/buckets/{bucketId}/files/{fileId}/download
 export const constructDownloadUrl = (bucketFileId: string) => {
-  return `${process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT}/storage/buckets/${process.env.NEXT_PUBLIC_APPWRITE_BUCKET}/files/${bucketFileId}/download?project=${process.env.NEXT_PUBLIC_APPWRITE_PROJECT}`;
+  // https://cloud.appwrite.io/v1/storage/buckets/68a0bb9400295a344b91/files/68a700710015e9ed640c/download?project=68a0b788003c6ea53386
+  console.log("download url:",`${process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT}/storage/buckets/${process.env.NEXT_PUBLIC_APPWRITE_BUCKET}/files/${bucketFileId}/download?project=${process.env.NEXT_PUBLIC_APPPWRITE_PROJECT}` )
+  return `${process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT}/storage/buckets/${process.env.NEXT_PUBLIC_APPWRITE_BUCKET}/files/${bucketFileId}/download?project=${process.env.NEXT_PUBLIC_APPPWRITE_PROJECT}`;
 };
 
 // DASHBOARD UTILS

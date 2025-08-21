@@ -1,4 +1,10 @@
 "use client";
+import download_icon from "@/app/assests/icons/download.svg";
+import delete_icon from "@/app/assests/icons/delete.svg";
+import edit_icon from "@/app/assests/icons/edit.svg";
+import share_icon from "@/app/assests/icons/share.svg";
+import info_icon from "@/app/assests/icons/info.svg";
+
 
 import {
   Dialog,
@@ -16,9 +22,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useState } from "react";
+import Dots from "@/app/assests/icons/dots.svg"
 import Image from "next/image";
-import { Models } from "node-appwrite";
-import { actionsDropdownItems } from "@/constants";
+import Loader from "@/app/assests/icons/loader.svg"
 import Link from "next/link";
 import { constructDownloadUrl } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
@@ -34,6 +40,34 @@ import { FileDetails, ShareInput } from "@/components/ActionsModalContent";
 import { StoredFile } from "..";
 
 const ActionDropdown = ({ file }: { file: StoredFile}) => {
+  const actionsDropdownItems = [
+  {
+    label: "Rename",
+    icon: edit_icon,
+    value: "rename",
+  },
+  {
+    label: "Details",
+    icon: info_icon,
+    value: "details",
+  },
+  {
+    label: "Share",
+    icon: share_icon,
+    value: "share",
+  },
+  {
+    label: "Download",
+    icon: download_icon,
+    value: "download",
+  },
+  {
+    label: "Delete",
+    icon: delete_icon,
+    value: "delete",
+  },
+];
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [action, setAction] = useState<ActionType | null>(null);
@@ -90,9 +124,9 @@ const ActionDropdown = ({ file }: { file: StoredFile}) => {
     const { value, label } = action;
 
     return (
-      <DialogContent className="shad-dialog button">
-        <DialogHeader className="flex flex-col gap-3">
-          <DialogTitle className="text-center text-light-100">
+      <DialogContent className="rounded-[26px] bg-white w-[90%] max-w-[400px] px-6 py-8 text-[14px] leading-[20px] font-medium ring-none border-none [&>button]:outline-none [&>button]:ring-0 [&>button]:focus:outline-none [&>button]:focus:ring-0">
+        <DialogHeader className="flex flex-col gap-3 text-black ">
+          <DialogTitle className="text-center text-black ">
             {label}
           </DialogTitle>
           {value === "rename" && (
@@ -111,22 +145,22 @@ const ActionDropdown = ({ file }: { file: StoredFile}) => {
             />
           )}
           {value === "delete" && (
-            <p className="delete-confirmation">
+            <p className="text-center ">
               Are you sure you want to delete{` `}
-              <span className="delete-file-name">{file.name}</span>?
+              <span className="font-medium text-[#125ffa]-100 ">{file.name}</span>?
             </p>
           )}
         </DialogHeader>
         {["rename", "delete", "share"].includes(value) && (
-          <DialogFooter className="flex flex-col gap-3 md:flex-row">
-            <Button onClick={closeAllModals} className="modal-cancel-button">
+          <DialogFooter className="flex flex-col gap-3 text-black  md:flex-row">
+            <Button onClick={closeAllModals} className="h-[52px] flex-1 rounded-full hover:bg-[#125ffa] hover:text-white border border-[#125ffa]/50 text-black bg-transparent">
               Cancel
             </Button>
-            <Button onClick={handleAction} className="modal-submit-button">
+            <Button onClick={handleAction} className="primary-btn rounded-full !mx-0 h-[52px] w-full flex-1 hover:bg-[#1559e1] hover:text-white  bg-[#125ffa] text-white">
               <p className="capitalize">{value}</p>
               {isLoading && (
                 <Image
-                  src="/assets/icons/loader.svg"
+                  src={Loader}
                   alt="loader"
                   width={24}
                   height={24}
@@ -143,23 +177,23 @@ const ActionDropdown = ({ file }: { file: StoredFile}) => {
   return (
     <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
       <DropdownMenu open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
-        <DropdownMenuTrigger className="shad-no-focus">
+        <DropdownMenuTrigger className="outline-none  ring-offset-transparent focus:ring-transparent focus:ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-transparent focus-visible:ring-offset-0">
           <Image
-            src="/assets/icons/dots.svg"
+            src={Dots}
             alt="dots"
-            width={34}
-            height={34}
+            width={24}
+            height={24}
           />
         </DropdownMenuTrigger>
-        <DropdownMenuContent>
-          <DropdownMenuLabel className="max-w-[200px] truncate">
+        <DropdownMenuContent className="bg-white border-none ">
+          <DropdownMenuLabel className="max-w-[200px] truncate  font-semibold">
             {file.name}
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
           {actionsDropdownItems.map((actionItem) => (
             <DropdownMenuItem
               key={actionItem.value}
-              className="shad-dropdown-item"
+              className="cursor-pointer hover:bg-[#125ffa]/10 "
               onClick={() => {
                 setAction(actionItem);
 

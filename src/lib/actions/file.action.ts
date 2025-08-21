@@ -11,7 +11,7 @@ import { ID, Models, Query } from "node-appwrite";
 import { constructFileUrl, getFileType, parseStringify } from "../utils";
 import { revalidatePath } from "next/cache";
 import { getcurrUser } from "./user.actions";
-import { UploadFileProps, RenameFileProps, DeleteFileProps, UpdateFileUsersProps } from "@/index";
+import { UploadFileProps, RenameFileProps, DeleteFileProps, UpdateFileUsersProps, GetFilesProps } from "@/index";
 type UserType = {
 fullName: string,
   email: string,
@@ -26,7 +26,7 @@ fullName: string,
   '$databaseId': string,
   '$collectionId': string
 }
-const createQueries =  (currUser:UserType)=>{
+const createQueries =  (currUser:UserType, types:string[], searchText:string, sort:string, limit?:number)=>{
     
     const queries = [
         Query.or([
@@ -34,6 +34,20 @@ const createQueries =  (currUser:UserType)=>{
             Query.contains("users", [currUser.email])
         ])
     ];
+    if(types.length>0){
+      queries.push(Query.equal('type', types))
+    }
+    if(searchText){
+      queries.push(Query.contains('name', searchText))
+    }
+    if(limit){
+      queries.push(Query.limit(limit))
+    }
+    if(sort){
+
+      const [sortBy, orderBy] = sort.split('-');
+      queries.push(orderBy==='asc'?Query.orderAsc(sortBy):Query.orderDesc(sortBy));
+    }
     return queries;
 }
 export const UploadFile = async ({ file,
@@ -74,12 +88,12 @@ try {
     handleError(error, "Failed to upload fie")
 }
 }
-export const GetFile = async ()=>{
+export const GetFile = async ({types = [], searchText='', sort = '$createdAt-desc', limit}:GetFilesProps)=>{
     const {database} = await createAdminClient()
     try {
         const currUser = await getcurrUser();
         if(!currUser) throw new Error("No user found")
-        const queries = createQueries(currUser.value);
+        const queries = createQueries(currUser.value, types, searchText, sort,limit);
         // console.log("type of user", typeof(currUser.value),"User Data", currUser.value);
         const files = await database.listDocuments(
             appwriteConfig.databaseId,

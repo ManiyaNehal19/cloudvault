@@ -8,7 +8,7 @@ const nextConfig: NextConfig = {
   },
   /* config options here */
     images: {
-    domains: ["svgrepo.com"], 
+    domains: ["svgrepo.com","cloud.appwrite.io"], 
   },
 };
 
