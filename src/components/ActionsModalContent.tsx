@@ -57,7 +57,7 @@ export const ShareInput = ({ file, onInputChange, onRemove }: Props) => {
           type="email"
           placeholder="Enter email address"
           onChange={(e) => onInputChange(e.target.value.trim().split(","))}
-          className=" body-2 shad-no-focus h-[52px] w-full rounded-full border px-4 shadow-drop-1 "
+          className=" body-2 outline-none ring-offset-transparent focus:ring-transparent focus:ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-transparent focus-visible:ring-offset-0  h-[52px] w-full rounded-full border px-4 shadow-drop-1 "
         />
         <div className="pt-4">
           <div className="flex justify-between">
