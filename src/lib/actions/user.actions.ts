@@ -15,11 +15,10 @@ const handleError = (error:unknown, message:string)=>{
 }
 export const sendEmailOTP =  async({email}:{email:string})=>{
     const {account} = await createAdminClient();
-
     try{
-        console.log("email sent to sendemail otp is this:",email);
-        
         const session = await account.createEmailToken(ID.unique(), email);
+        console.log("email sent to sendemail otp is this:",email, session);
+
         return session.userId;
     }catch(error){
         handleError(error, "Failed to send email OTP");
@@ -94,29 +93,43 @@ export const verfiySecret = async({accID, password}:{accID:string, password:stri
     }
 
 }
-export const getcurrUser = async ()=>{
-    const {database, account} = await createSessionClient();
-    const result = await account.get();
-    const user =  await database.listDocuments(
-        appwriteConfig.databaseId,
-        appwriteConfig.usersCollectionId,
-        [Query.equal("accID", result.$id)]
-
-    )
-    if(user.total<=0) return null;
-    return parseStringify({ value: user.documents[0]});
-}
-
-export async function logoutUser() {
-    const {account} = await createSessionClient();
+export const getcurrUser = async () => {
     try {
-        await account.deleteSession('current');
-        (await cookies()).delete("appwrite-session")
-    }catch(error){
-        handleError(error, "Failed to signout user")
-    }finally{
-        redirect("/login")
-    } 
+        const sessionClient = await createSessionClient();
+        if (!sessionClient) {
+            return null; // No session available
+        }
+        
+        const { database, account } = sessionClient;
+        const result = await account.get();
+        const user = await database.listDocuments(
+            appwriteConfig.databaseId,
+            appwriteConfig.usersCollectionId,
+            [Query.equal("accID", result.$id)]
+        );
+        
+        if (user.total <= 0) return null;
+        return parseStringify({ value: user.documents[0] });
+        
+    } catch (error) {
+        console.log("Error getting current user:", error);
+        return null;
+    }
+};
+export async function logoutUser() {
+    try {
+        const sessionClient = await createSessionClient();
+        if (sessionClient) {
+            const { account } = sessionClient;
+            await account.deleteSession('current');
+        }
+        // Always delete the cookie regardless of session state
+        (await cookies()).delete("appwrite-session");
+    } catch (error) {
+        handleError(error, "Failed to signout user");
+    } finally {
+        redirect("/login");
+    }
 }
 export const LoginUser = async ({email}:{email:string})=>{
     try {

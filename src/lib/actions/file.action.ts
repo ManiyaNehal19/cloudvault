@@ -5,13 +5,13 @@ const handleError = (error:unknown, message:string)=>{
     
 }
 import { InputFile } from "node-appwrite/file";
-import { createAdminClient } from "../appwrite"
+import { createAdminClient, createSessionClient } from "../appwrite"
 import { appwriteConfig } from "../appwrite/config";
-import { ID, Models, Query } from "node-appwrite";
+import { ID, Query } from "node-appwrite";
 import { constructFileUrl, getFileType, parseStringify } from "../utils";
 import { revalidatePath } from "next/cache";
 import { getcurrUser } from "./user.actions";
-import { UploadFileProps, RenameFileProps, DeleteFileProps, UpdateFileUsersProps, GetFilesProps } from "@/index";
+import { UploadFileProps, RenameFileProps, DeleteFileProps, UpdateFileUsersProps, GetFilesProps, FileType, StoredFile } from "@/index";
 type UserType = {
 fullName: string,
   email: string,
@@ -175,5 +175,55 @@ export const updateFileUsers = async ({
     return parseStringify(updatedFile);
   } catch (error) {
     handleError(error, "Failed to rename file");
+  }
+};
+export const GetTotalSpace = async () => {
+  try {
+    const sessionClient = await createSessionClient();
+    if (!sessionClient) {
+      return null; // No session available
+    }
+    
+    const { database } = sessionClient;
+    const CurrUser = await getcurrUser();
+    
+    if (!CurrUser) {
+      return null; // No current user
+    }
+    
+    const files = await database.listDocuments(
+      appwriteConfig.databaseId,
+      appwriteConfig.filesCollectionId,
+      [Query.equal("owner", [CurrUser.value.$id])] // Note: added .value here
+    );
+    
+    const TotalSpace = {
+      image: { size: 0, date: "" },
+      document: { size: 0, date: "" },
+      video: { size: 0, date: "" },
+      audio: { size: 0, date: "" },
+      other: { size: 0, date: "" },
+      used: 0,
+      all: 2 * 1024 * 1024 * 1024
+    };
+    
+    files.documents.forEach((file) => {
+      const fileType = file.type as FileType;
+      TotalSpace[fileType].size += file.size;
+      TotalSpace.used += file.size;
+
+      if (
+        !TotalSpace[fileType].date ||
+        new Date(file.$updatedAt) > new Date(TotalSpace[fileType].date)
+      ) {
+        TotalSpace[fileType].date = file.$updatedAt;
+      }
+    });
+    
+    return parseStringify({ value: { TotalSpace } });
+    
+  } catch (error) {
+    handleError(error, "Error calculating Total space");
+    return null; // Return null on error
   }
 };

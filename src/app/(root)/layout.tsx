@@ -8,9 +8,7 @@ import { redirect } from 'next/navigation'
 import { Toaster } from "@/components/ui/sonner"
 
 async function Layout({ children }: { children: React.ReactNode }) {
-  const currentUser = await getcurrUser();
-  console.log(currentUser);
-
+ const currentUser = await getcurrUser();
   if (!currentUser) {
     redirect("/login");
   }

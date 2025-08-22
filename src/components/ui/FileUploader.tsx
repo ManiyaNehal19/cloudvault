@@ -86,7 +86,7 @@ const onDrop = useCallback(async (acceptedFiles: File[]) => {
       </div>
       
       {files.length > 0 && (
-        <div className='fixed bottom-10 right-10 z-50 w-full max-w-[480px] rounded-[20px] bg-white p-7 shadow-drop-3'>
+        <div className='fixed bottom-10 right-10 z-50 w-full max-w-[480px] rounded-[20px] bg-[#125ffa]/10 p-7 shadow-drop-3'>
           <h4 className='text-light-100 text-[18px] leading-[20px] font-medium mb-4'>Uploading</h4>
           
           <ul className='flex flex-col gap-3'>

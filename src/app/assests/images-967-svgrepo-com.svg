@@ -1,19 +1,2 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
-<svg width="800px" height="800px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    
-    <title>images [#967]</title>
-    <desc>Created with Sketch.</desc>
-    <defs>
-
-</defs>
-    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="Dribbble-Light-Preview" transform="translate(-180.000000, -3919.000000)" fill="#000000">
-            <g id="icons" transform="translate(56.000000, 160.000000)">
-                <path d="M135.083,3769.667 C136.188,3769.667 137.083,3768.772 137.083,3767.667 C137.083,3766.562 136.188,3765.667 135.083,3765.667 C133.979,3765.667 133.083,3766.562 133.083,3767.667 C133.083,3768.772 133.979,3769.667 135.083,3769.667 L135.083,3769.667 Z M126,3777 L127.956,3777 L130.824,3773.882 L127.594,3770.402 L126,3771.996 L126,3777 Z M126,3769.167 L127.578,3767.589 L127.594,3767.605 L127.61,3767.589 L132.238,3772.218 L133.669,3770.787 L133.685,3770.803 L133.701,3770.787 L138,3775.086 L138,3765 L126,3765 L126,3769.167 Z M136.586,3777 L133.685,3774.099 L130.784,3777 L136.586,3777 Z M124,3779 L140,3779 L140,3763 L124,3763 L124,3779 Z M144,3759 L144,3775 L142,3775 L142,3761 L128,3761 L128,3759 L144,3759 Z" id="images-[#967]">
-
-</path>
-            </g>
-        </g>
-    </g>
-</svg>
+<?xml version="1.0" encoding="utf-8"?><!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+<svg width="800px" height="800px" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><title>ionicons-v5-e</title><path d="M432,112V96a48.14,48.14,0,0,0-48-48H64A48.14,48.14,0,0,0,16,96V352a48.14,48.14,0,0,0,48,48H80" style="fill:none;stroke:#000000;stroke-linejoin:round;stroke-width:32px"/><rect x="96" y="128" width="400" height="336" rx="45.99" ry="45.99" style="fill:none;stroke:#000000;stroke-linejoin:round;stroke-width:32px"/><ellipse cx="372.92" cy="219.64" rx="30.77" ry="30.55" style="fill:none;stroke:#000000;stroke-miterlimit:10;stroke-width:32px"/><path d="M342.15,372.17,255,285.78a30.93,30.93,0,0,0-42.18-1.21L96,387.64" style="fill:none;stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"/><path d="M265.23,464,383.82,346.27a31,31,0,0,1,41.46-1.87L496,402.91" style="fill:none;stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"/></svg>
