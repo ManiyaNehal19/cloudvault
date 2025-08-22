@@ -31,6 +31,7 @@ function Search() {
     setopen(false);
     setresult([]);
     router.push(`/${(file.type==='video'||file.type==='audio')?'media':file.type + 's'}?query=${query}`)
+    
 
   }
   useEffect(()=>{

@@ -19,7 +19,7 @@ interface Props{
 }
 
 function FileUploader({ownerID,accID, className }:Props) {
-  console.log("ownerid and accID",ownerID, accID);
+  // console.log("ownerid and accID",ownerID, accID);
   
   const [files, setFiles] = useState<File[]>([])
   const path = usePathname();

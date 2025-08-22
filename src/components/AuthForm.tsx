@@ -118,7 +118,7 @@ function AuthForm({ type }: { type: AuthFormProps }) {
           )}
         />
 
-        <Button className="bg-[#125ffa] text-white w-full" type="submit">
+        <Button className="bg-[#125ffa] hover:bg-[#1454d4] cursor-pointer text-white w-full" type="submit">
           {type === "Login" ? "Login" : "Register"}
         </Button>
 

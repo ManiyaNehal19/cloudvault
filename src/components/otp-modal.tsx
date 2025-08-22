@@ -63,8 +63,8 @@ function OtpModal({ email, accountID }: { email: string, accountID: string | nul
 </AlertDialogCancel>
 
         <AlertDialogHeader className="text-center">
-          <AlertDialogTitle className="h2">Enter OTP</AlertDialogTitle>
-          <AlertDialogDescription className="subtitle-2 text-gray-800">
+          <AlertDialogTitle className="text-[24px] leading-[36px] font-bold">Enter OTP</AlertDialogTitle>
+          <AlertDialogDescription className="text-[14px] leading-[20px] font-semibold text-gray-800">
             We&apos;ve sent a code to <span className="pl-1">{email}</span>
           </AlertDialogDescription>
         </AlertDialogHeader>
@@ -77,7 +77,7 @@ function OtpModal({ email, accountID }: { email: string, accountID: string | nul
                 <InputOTPSlot
                   key={i}
                   index={i}
-                  className="shad-otp-slot "
+                  className="ring-[#125ffa] "
                 />
               ))}
             </InputOTPGroup>
@@ -88,7 +88,7 @@ function OtpModal({ email, accountID }: { email: string, accountID: string | nul
         <AlertDialogFooter className='w-full flex flex-col  ' >
           
             <AlertDialogAction
-            className="bg-[#125ffa] text-white font-normal rounded-lg w-full "
+            className="bg-[#125ffa] hover:bg-[#1454d4] cursor-pointer text-white font-normal rounded-lg w-full "
             onClick={handleSubmit}
           >
             Continue

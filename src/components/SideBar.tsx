@@ -53,7 +53,7 @@ function SideBar({fullName, avatar, email}:Props) {
         <ul className='flex flex-1 flex-col gap-6'>
             {navItems.map(({href, name, icon})=>
               (
-                <Link key={name} href={href} className='lg:w-full'>
+                <Link key={name} href={href} className='lg:w-full hover:bg-[#125ffa]/10 rounded-full'>
                     <li className={cn('flex text-light-100 gap-4 rounded-xl lg:w-full justify-center lg:justify-start items-center h5 lg:px-[30px] h-[52px] lg:rounded-full text-gray-600 ',(pathname===href )&&' bg-[#125ffa] text-white shadow-drop-2')}>
                         <Image className={cn(' invert-0 opacity-100   ',(pathname===href )&&'w-6 filter invert ')} src={icon} alt={name} height={24} width={24}/>
                         <p  className={cn('text-black hidden lg:block ',(pathname===href )&&' text-white hidden lg:block')}>{name}</p>
