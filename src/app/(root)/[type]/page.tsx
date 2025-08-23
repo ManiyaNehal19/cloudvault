@@ -1,12 +1,10 @@
 import Sort from '@/components/Sort';
 import { GetFile, GetTotalSpace } from '@/lib/actions/file.action';
-import { Section } from 'lucide-react';
+
 import React from 'react'
-import { Models } from 'node-appwrite';
 import { StoredFile, SearchParamProps, FileType } from '@/index';
 import Card from '@/components/Card';
-import { string } from 'zod';
-import { convertFileSize, getFileType, getFileTypesParams } from '@/lib/utils';
+import { convertFileSize, getFileTypesParams } from '@/lib/utils';
 
 const  Page = async ({searchParams,params}: SearchParamProps) => {
     type Size_Date = {

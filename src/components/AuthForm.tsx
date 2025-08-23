@@ -46,6 +46,7 @@ function AuthForm({ type }: { type: AuthFormProps }) {
       let user;
       if(type==="Register"){
         user = await createAccount({
+        
         email: values.email,
         fullName: values.fullName || "",
         })
@@ -55,6 +56,8 @@ function AuthForm({ type }: { type: AuthFormProps }) {
 
       }else{
         user = await LoginUser({email:values.email})
+        console.log("User in login User", user);
+        
         // console.log("User acc id login:",user.value.accID);
         
         // console.log("User acc id login2:",user.accID);
@@ -137,6 +140,7 @@ function AuthForm({ type }: { type: AuthFormProps }) {
         </div>
       </form>
     </Form>
+    {console.log("accID before modal open", accID)}
     
     {accID && (<OtpModal email={form.getValues("email")} accountID={accID}/>)}
    

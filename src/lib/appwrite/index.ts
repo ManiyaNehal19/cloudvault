@@ -11,9 +11,7 @@ export const createSessionClient = async ()=>{
         .setProject(appwriteConfig.projectId)
      
     const session = (await cookies()).get("appwrite-session");
-    if(!session || !session.value){
-       return;
-    }
+    if (!session || !session.value) throw new Error("No session");
     client.setSession(session.value);
     return {
         get account(){
@@ -24,6 +22,10 @@ export const createSessionClient = async ()=>{
         }
     }
 }
+
+
+
+
 //should never be exposed to user direcctly, its a very powerful function
 //this is used to create a client that can be used to perform admin operations
 //nth about session or cookies

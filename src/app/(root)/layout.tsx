@@ -12,15 +12,16 @@ async function Layout({ children }: { children: React.ReactNode }) {
   if (!currentUser) {
     redirect("/login");
   }
-
+  // console.log("Current User i the layout",currentUser);
+  
   return (
     <main className="flex h-screen">
       <SideBar 
-        {...currentUser.value}
+        {...currentUser}
       />
       <section className="flex h-full flex-1 flex-col">
-        <MobileNav {...currentUser.value} />
-        <Header ownerID={currentUser.value.$id} accID={currentUser.value.accID}/>
+        <MobileNav {...currentUser} />
+        <Header ownerID={currentUser.$id} accID={currentUser.accID}/>
         <div className="remove-scrollbar h-full flex-1 overflow-auto bg-light-400 px-5 py-7 sm:mr-7 sm:rounded-[30px] md:mb-7 md:px-9 md:py-10">
           {children}
         </div>

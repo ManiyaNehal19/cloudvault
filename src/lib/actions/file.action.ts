@@ -27,7 +27,7 @@ fullName: string,
   '$collectionId': string
 }
 const createQueries =  (currUser:UserType, types:string[], searchText:string, sort:string, limit?:number)=>{
-    
+    console.log("Create Queries current USer",currUser)
     const queries = [
         Query.or([
             Query.equal("owner", [currUser.$id]),
@@ -92,9 +92,10 @@ export const GetFile = async ({types = [], searchText='', sort = '$createdAt-des
     const {database} = await createAdminClient()
     try {
         const currUser = await getcurrUser();
+
         if(!currUser) throw new Error("No user found")
-        const queries = createQueries(currUser.value, types, searchText, sort,limit);
-        // console.log("type of user", typeof(currUser.value),"User Data", currUser.value);
+        const queries = createQueries(currUser, types, searchText, sort,limit);
+        
         const files = await database.listDocuments(
             appwriteConfig.databaseId,
             appwriteConfig.filesCollectionId,
@@ -194,7 +195,7 @@ export const GetTotalSpace = async () => {
     const files = await database.listDocuments(
       appwriteConfig.databaseId,
       appwriteConfig.filesCollectionId,
-      [Query.equal("owner", [CurrUser.value.$id])] // Note: added .value here
+      [Query.equal("owner", [CurrUser.$id])] // Note: added .value here
     );
     
     const TotalSpace = {

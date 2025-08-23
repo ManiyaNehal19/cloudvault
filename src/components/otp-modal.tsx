@@ -1,5 +1,6 @@
 "use client"
 import React, { useState } from 'react'
+import { toast } from 'sonner'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -36,9 +37,41 @@ function OtpModal({ email, accountID }: { email: string, accountID: string | nul
       password: otp,              // otp acts as password here
     });
     if(sessionId) router.push("/");
+    else{
+      
+        toast(
+        <div className="w-full h-full flex items-center justify-between bg-red-700 p-4 rounded">
+          <p className="text-[14px] leading-[20px] font-normal text-white">
+            Incorrect OTP
+          </p>
+        </div>,
+        {
+          style: {
+            padding: 0,
+            background: "transparent",
+          },
+        }
+      )
+    
+      
+    }
 
     } catch (error) {
-      console.error("Error submitting OTP:", error);
+      toast(
+        <div className="w-full h-full flex items-center justify-between bg-red-700 p-4 rounded">
+          <p className="text-[14px] leading-[20px] font-normal text-white">
+           Error submitting OTP</p>
+        </div>,
+        {
+          style: {
+            padding: 0,
+            background: "transparent",
+          },
+        }
+   
+      )
+        // handleError(error, "failed to verify OTP")
+      // console.error("Error submitting OTP:", error);
     }
     setLoading(false);
   }
