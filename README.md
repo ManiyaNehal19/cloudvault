@@ -3,7 +3,6 @@
 A web app built with Next.js, Tailwind, and Appwrite. It includes authentication with OTP, file uploads, dynamic file routes, sharing, search, sorting, and a responsive dashboard.
 
 <p align="center">
-  <img alt="License" src="https://img.shields.io/badge/license-MIT-blue.svg">
   <img alt="Next.js" src="https://img.shields.io/badge/Next.js-13%2B-black">
   <img alt="Tailwind" src="https://img.shields.io/badge/TailwindCSS-3.x-06B6D4">
   <img alt="Appwrite" src="https://img.shields.io/badge/Appwrite-Cloud%2FServer-F02E65">
